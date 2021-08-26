@@ -100,7 +100,6 @@ router.post('/login', (req, res) => {
 //@dest     Return Current User
 //@access   Private
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('get./current from users.js');
     res.json({
         id: req.user.id,
         Name: req.user.name,

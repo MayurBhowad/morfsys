@@ -1,7 +1,8 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const mongoose = require('mongoose');
-const User = mongoose.model('users');
+// const User = mongoose.model('users');
+const User = require('../models/user.model');
 
 const opts = { };
 opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
@@ -11,7 +12,7 @@ module.exports = passport => {
     passport.use(new JwtStrategy(opts, (jwt_paylad, done) => {
         User.findById(jwt_paylad.id).then(user => {
             if (user) {
-                console.log('config/passport.js');
+                // console.log('config/passport.js');
                 return done(null, user);
             }
             return done(null, false);

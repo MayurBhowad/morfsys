@@ -11,7 +11,9 @@ const InvoiceSchema = new Schema({
         required: true
     },
     order_date: {
-        type: String,
+        // type: String,
+        type: Date,
+        default: Date.now
     },
     items: [{
         name: {
