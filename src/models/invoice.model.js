@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const InvoiceSchema = new Schema({
+    created_by: {
+        type: Schema.Types.ObjectId,
+        ref: 'users'
+    },
     to: {
         type: String,
         required: true
