@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const passport = require('passport')
 
 require('dotenv').config();
@@ -18,5 +19,13 @@ require('./config/passport.config')(passport)
 
 app.use('/invoice', require('./routes/invoice.routes'));
 app.use('/users', require('./routes/user.routes'));
+
+// if (process.env.NODE_ENV === 'production') {
+app.use(express.static('frontend'));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'index.html'));
+});
+// }
 
 app.listen(PORT, () => console.log('server is up...'))

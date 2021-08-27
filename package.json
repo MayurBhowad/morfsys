@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "client-install": "npm install --prefix client",
+    "client-install": "npm install --prefix src/frontend",
     "start": "node ./src/index.main.js",
     "server": "nodemon ./src/index.main.js",
-    "client": "npm start --prefix client",
+    "client": "npm start --prefix src/frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "bmmayur",

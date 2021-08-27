@@ -14,6 +14,13 @@ router.get('/tests', (req, res) => res.json({ msg: "invoice WOrks" }));
 //@route    POST api/invoice/new
 //@dest     new invoice
 //@access   Private
+router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Invoice.findById(req.user.id).then(invoices => res.status(200)).catch(err => console.log(err))
+})
+
+//@route    POST api/invoice/new
+//@dest     new invoice
+//@access   Private
 router.post('/new', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { userId, invoiceDate, to, orderDate, items } = req.body;
     if (!req.user.id) {
