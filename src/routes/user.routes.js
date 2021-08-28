@@ -49,7 +49,7 @@ router.post('/register', (req, res) => {
     });
 });
 
-//@route    POST api/users/login
+//@route    POST /users/login
 //@dest     Login User / Returning JWT 
 //@access   Public
 router.post('/login', (req, res) => {

@@ -8,36 +8,23 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 function NewInvoice(props) {
-    const { handleClickOpen, handleClose, open } = props;
+    const { handleClickOpen, handleCloseItemRmove, open, deleteItem } = props;
 
     return (
         <div>
-            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">New Invoice</DialogTitle>
+            <Dialog open={open} onClose={handleCloseItemRmove} aria-labelledby="form-dialog-title">
+                <DialogTitle id="alert-dialog-title">{"Are you sure?"}</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="to"
-                        label="To"
-                        type="text"
-                        fullWidth
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="order_date"
-                        label="Date"
-                        type="date"
-                        fullWidth
-                    />
+                    <DialogContentText id="alert-dialog-description">
+                        This is will remove this!
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleCloseItemRmove} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={handleClose} color="primary">
-                        Add
+                    <Button onClick={deleteItem} color="secondary">
+                        Remove
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
@@ -16,6 +16,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Button, TextField } from '@material-ui/core';
 import clsx from 'clsx';
+import { getInvoice, removeItem } from '../services/Invoice.service';
 
 import NewInvoice from './forms/NewInvoice';
 import NewInvoiceTable from './forms/NewInvoiceTable';
@@ -42,10 +43,28 @@ function createData(to, invoice_date, order_date, items) {
     };
 }
 
+function formatDate(myDate) {
+    const date = new Date(myDate)
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+    return { dd, mm, yyyy }
+}
+
 function Row(props) {
-    const { row } = props;
+    const { row, setItemRemoveDi, setWillDeleteItem } = props;
     const [open, setOpen] = React.useState(false);
     const classes = useRowStyles();
+
+    const invDate = formatDate(row.date)
+    const ordrDate = formatDate(row.order_date)
+
+    const ReadyToDelete = (data) => {
+        data.invoice_id = row._id
+        setItemRemoveDi(true);
+        setWillDeleteItem(data)
+    }
+
     console.log(row);
 
     return (
@@ -57,9 +76,9 @@ function Row(props) {
                     </IconButton>
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.invoice_date}
+                    {`${invDate.dd}/${invDate.mm}/${invDate.yyyy}`}
                 </TableCell>
-                <TableCell align="right">Order Date: {row.order_date}</TableCell>
+                <TableCell align="right">Order Date: {`${ordrDate.dd}/${ordrDate.mm}/${ordrDate.yyyy}`}</TableCell>
                 <TableCell align="right">Invoice To: {row.to}</TableCell>
                 {/* <TableCell align="right">{row.carbs}</TableCell>
                 <TableCell align="right">{row.protein}</TableCell> */}
@@ -79,7 +98,7 @@ function Row(props) {
                                 </TableHead>
                                 <TableBody>
                                     {row.items.map((historyRow) => (
-                                        <TableRow key={historyRow.id}>
+                                        <TableRow key={historyRow._id} onClick={e => ReadyToDelete(historyRow)}>
                                             <TableCell component="th" scope="row">
                                                 {historyRow.name}
                                             </TableCell>
@@ -161,24 +180,45 @@ const rows = [
 
 function Home() {
     const classes = useRowStyles();
-    const [open, setOpen] = React.useState(false);
+    const [itemRemoveDi, setItemRemoveDi] = React.useState(false);
     const [newInvOpen, setNewInvOpen] = React.useState(false);
+    const [myRows, setmyRows] = React.useState()
+    const [willDeleteItem, setWillDeleteItem] = React.useState()
 
-    const handleClickOpen = () => {
-        setOpen(true);
+    const deleteItem = () => {
+        removeItem(willDeleteItem.invoice_id, willDeleteItem._id)
+    }
+
+
+    const handleClickItemRmoveOpen = () => {
+        setItemRemoveDi(true)
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleCloseItemRmove = () => {
+        setItemRemoveDi(false)
     };
+
+    useEffect(() => {
+        let fetchData = async () => {
+            let data = await getInvoice()
+            console.log(data.data)
+            setmyRows(data.data)
+        };
+        fetchData()
+    }, [])
 
     return (
         <>
             <TableContainer component={Paper}>
                 <Table aria-label="collapsible table">
                     <TableBody>
-                        {rows.map((row) => (
-                            <Row key={row.name} row={row} />
+                        {myRows && myRows.map((row) => (
+                            <Row
+                                key={row._id}
+                                row={row}
+                                setItemRemoveDi={setItemRemoveDi}
+                                setWillDeleteItem={setWillDeleteItem}
+                            />
                         ))}
                     </TableBody>
                 </Table>
@@ -194,11 +234,12 @@ function Home() {
                     cancel
                 </Button>
             }
-            {/* <NewInvoice
-                handleClickOpen={handleClickOpen}
-                handleClose={handleClose}
-                open={open}
-            /> */}
+            <NewInvoice
+                handleClickOpen={handleClickItemRmoveOpen}
+                handleCloseItemRmove={handleCloseItemRmove}
+                deleteItem={deleteItem}
+                open={itemRemoveDi}
+            />
         </>
     );
 }

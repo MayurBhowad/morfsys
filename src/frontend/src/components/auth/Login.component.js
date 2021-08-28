@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,6 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { login } from '../../services/Auth.service';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -36,6 +37,17 @@ const useStyles = makeStyles((theme) => ({
 
 function Login() {
     const classes = useStyles();
+    const history = useHistory();
+
+    const [email, setEmail] = useState()
+    const [password, setPassword] = useState()
+
+    const submitData = e => {
+        e.preventDefault();
+        login(email, password).then(() => {
+            history.push('/home')
+        })
+    }
 
     return (
         <Container component="main" maxWidth="xs">
@@ -47,7 +59,7 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} onSubmit={e => submitData(e)} noValidate>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -55,7 +67,7 @@ function Login() {
                         fullWidth
                         id="email"
                         label="Email Address"
-                        name="email"
+                        onChange={e => setEmail(e.target.value)}
                         autoComplete="email"
                         autoFocus
                     />
@@ -64,7 +76,7 @@ function Login() {
                         margin="normal"
                         required
                         fullWidth
-                        name="password"
+                        onChange={e => setPassword(e.target.value)}
                         label="Password"
                         type="password"
                         id="password"
