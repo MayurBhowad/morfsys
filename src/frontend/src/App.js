@@ -4,8 +4,12 @@ import Login from './components/auth/Login.component';
 import Signup from './components/auth/Signup.component';
 import Home from './components/Home.component';
 import Navbar from './components/Navbar.component';
+import deleteAuthToken from './utils/deleteAuthToken.util';
 
+deleteAuthToken();
 export class App extends Component {
+
+
   render() {
     return (
       <div>

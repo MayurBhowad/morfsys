@@ -67,6 +67,7 @@ function Row(props) {
 
     console.log(row);
 
+
     return (
         <React.Fragment>
             <TableRow className={classes.root}>
@@ -187,6 +188,7 @@ function Home() {
 
     const deleteItem = () => {
         removeItem(willDeleteItem.invoice_id, willDeleteItem._id)
+        setItemRemoveDi(false)
     }
 
 
@@ -205,7 +207,7 @@ function Home() {
             setmyRows(data.data)
         };
         fetchData()
-    }, [])
+    }, [itemRemoveDi])
 
     return (
         <>
